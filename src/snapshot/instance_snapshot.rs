@@ -3,7 +3,7 @@
 use std::borrow::Cow;
 
 use rbx_dom_weak::{
-    types::{Ref, Variant},
+    types::{Ref, SomeRef, Variant},
     ustr, AHashMap, HashMapExt as _, Instance, Ustr, UstrMap, WeakDom,
 };
 use serde::{Deserialize, Serialize};
@@ -107,9 +107,9 @@ impl InstanceSnapshot {
         Self::from_raw_tree(&mut raw_tree, id)
     }
 
-    fn from_raw_tree(raw_tree: &mut AHashMap<Ref, Instance>, id: Ref) -> Self {
+    fn from_raw_tree(raw_tree: &mut AHashMap<SomeRef, Instance>, id: Ref) -> Self {
         let instance = raw_tree
-            .remove(&id)
+            .remove(&id.to_some_ref().unwrap())
             .expect("instance did not exist in tree");
 
         let children = instance
